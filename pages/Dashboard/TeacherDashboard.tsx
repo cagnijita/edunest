@@ -4,7 +4,7 @@ import { User, Subject, Note, Announcement } from '../../types';
 import DashboardSidebar from '../../components/Layout/DashboardSidebar';
 import DashboardTopbar from '../../components/Layout/DashboardTopbar';
 import { useNavigate } from "react-router-dom";
-import { generateSummary } from '../../services/geminiService';
+import { generateSummary } from '@/server/services/geminiService';
 import { create } from 'domain';
 
 interface TeacherDashboardProps {
