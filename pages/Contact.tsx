@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+const API = import.meta.env.VITE_API_URL;
 
 const Contact: React.FC = () => {
   const [form, setForm] = useState({
@@ -16,7 +17,7 @@ const Contact: React.FC = () => {
   e.preventDefault();
 
   try {
-    const res = await fetch("http://localhost:5000/api/contact", {
+    const res = await fetch(`${API}5000/api/contact`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

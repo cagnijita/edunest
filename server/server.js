@@ -25,10 +25,23 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // middlewares
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:5173",
+  "https://edunest-eight.vercel.app"
+];
+
 app.use(cors({
-  origin: "https://your-frontend.vercel.app",
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true); // allow Postman / server calls
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error("CORS not allowed"));
+  },
   credentials: true
 }));
+
 app.use(express.json());
 
 // routes
