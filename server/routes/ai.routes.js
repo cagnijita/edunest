@@ -2,7 +2,7 @@ import express from "express";
 import { protect } from "../middleware/auth.middleware.js";
 import Enrollment from "../models/Enrollment.js";
 import Note from "../models/Note.js";
-import { generateSummary } from "../../services/geminiService.js";
+import { generateSummary } from "../services/geminiService.js";
 
 const router = express.Router();
 
