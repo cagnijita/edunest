@@ -1,0 +1,9 @@
+
+{
+  "name": "EduNest – Smart Learning Portal",
+  "description": "A high-performance educational platform with role-based dashboards, AI-powered summaries, and complete course management.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
