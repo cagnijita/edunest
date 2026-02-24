@@ -17,7 +17,7 @@ const Contact: React.FC = () => {
   e.preventDefault();
 
   try {
-    const res = await fetch(`${API}5000/api/contact`, {
+    const res = await fetch(`${API}/api/contact`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
