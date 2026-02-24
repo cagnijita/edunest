@@ -52,28 +52,35 @@ const [selectedModuleId, setSelectedModuleId] = useState("");
       });
   }, []);
 
-  useEffect(() => {
+ useEffect(() => {
   if (!currentUser || currentUser.role !== "student") return;
 
-  fetch("http://localhost:5000/api/enrollments/my", {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`
+  const fetchEnrollments = async () => {
+    const res = await fetch(
+      "http://localhost:5000/api/enrollments/my",
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      setEnrolledIds([]);
+      return;
     }
-  })
-    .then(res => res.json())
-  .then(data => {
-  console.log("ENROLLMENTS:", data);
 
-  const ids = data.map((course: any) =>
-    course._id.toString()
-  );
+    const ids = data.map((course: any) =>
+      course._id.toString()
+    );
 
-  console.log("ENROLLED IDS:", ids);
+    setEnrolledIds(ids);
+  };
 
-  setEnrolledIds(ids);
-})
-    .catch(() => setEnrolledIds([]));
-}, []);
+  fetchEnrollments();
+}, [successMessage]);   // 👈 ADD THIS
 
   useEffect(() => {
   const params = new URLSearchParams(location.search);
@@ -139,14 +146,53 @@ useEffect(() => {
 
     const data = await res.json();
 
-    if (res.ok) {
-     setSuccessMessage("Successfully enrolled!");
-setTimeout(() => {
-  window.location.reload();
-}, 1000);
-      setShowForm(false);  }
+   if (res.ok) {
+  setSuccessMessage("Successfully enrolled!");
+
+  // 🔥 Immediately update enrolledIds
+  setEnrolledIds(prev => [...prev, courseId.toString()]);
+
+  setShowForm(false);
+}
     else alert(data.message);
   };
+
+ const handlePaidEnrollment = async (course: any) => {
+  if (!course.price || course.price === 0) {
+    await enroll(course._id);
+    return;
+  }
+
+  const confirmPay = window.confirm(
+    `Simulate payment of ₹${course.price}?`
+  );
+
+  if (!confirmPay) return;
+
+  const res = await fetch(
+    "http://localhost:5000/api/enrollments/payments/simulate",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      },
+      body: JSON.stringify({
+        courseId: course._id
+      })
+    }
+  );
+
+  const data = await res.json();
+
+  if (!res.ok || !data.success) {
+    alert("Payment simulation failed");
+    return;
+  }
+
+  // ✅ Only enroll if simulation succeeded
+  await enroll(course._id);
+};
 
   if (loading) return <div className="p-10">Loading courses...</div>;
   const getImage = (path: string) => {
@@ -206,6 +252,7 @@ const addQuestion = () => {
 
       <div className="grid md:grid-cols-3 gap-8">
         {courses.map(course => (
+          
           <div key={course._id} className="bg-white rounded-2xl shadow overflow-hidden hover:shadow-lg transition">
 
             {/* Thumbnail */}
@@ -291,12 +338,13 @@ const addQuestion = () => {
     setShowForm(true);
   }}
   className={`py-2 px-6 rounded-lg transition-all duration-200 ${
-    enrolledIds.includes(course._id)
-      ? "bg-gray-400 text-white"
+    enrolledIds.includes(course._id.toString())
+      ? "bg-gray-400 cursor-not-allowed text-white"
       : "bg-[#069B6C] hover:bg-[#047a56] text-white"
   }`}
+  disabled={enrolledIds.includes(course._id.toString())}
 >
-  {enrolledIds.includes(course._id) ? "Enroll" : "Enroll"}
+  {enrolledIds.includes(course._id.toString()) ? "Enrolled" : "Enroll"}
 </button>
 
   <span className="px-3 py-1 text-sm font-semibold rounded-full 
@@ -742,7 +790,7 @@ setEditingLessonId(null);
   return;
 }
 
-await enroll(id);
+await handlePaidEnrollment(selectedCourse);
   }
 
   // WAIT FOR DOM UPDATE THEN CLOSE MODAL

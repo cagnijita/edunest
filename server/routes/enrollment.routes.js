@@ -68,9 +68,11 @@ router.get("/my", protect, async (req, res) => {
     const enrollments = await Enrollment.find({ studentId: req.user.id })
       .populate("courseId");
 
-    const courses = enrollments.map(e => e.courseId);
+   const courses = enrollments
+  .map(e => e.courseId)
+  .filter(course => course !== null);  // 🔥 important
 
-    res.json(courses);
+res.json(courses);
 
   } catch (err) {
     res.status(500).json({ message: err.message });

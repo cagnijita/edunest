@@ -269,20 +269,28 @@ const generateStudyPlan = async () => {
 )}
 
   <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-    {myCourses.map((e:any) => (
-     <div
-  key={e._id}
-  className="bg-white rounded-[2.5rem] border border-emerald-100 shadow-sm p-8 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
->
-
+  {myCourses
+    .filter((e: any) => e.courseId) // 🟢 prevent null crash
+    .map((e: any) => (
+      <div
+        key={e._id}
+        className="bg-white rounded-[2.5rem] border border-emerald-100 shadow-sm p-8 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+      >
         <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-2">
           COURSE
         </p>
 
-        <h4 className="text-xl font-bold text-slate-900 mb-2">
-          {e.courseId.title}
-        </h4>
-
+      <h4 className="text-xl font-bold text-slate-900 mb-2">
+  {e.courseId?.title || "Course Removed"}
+</h4>
+{e.courseId && (
+  <button
+    onClick={() => navigate(`/course/${e.courseId._id}`)}
+    className="mt-4 w-full py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white rounded-xl text-xs font-bold hover:from-emerald-700 hover:to-emerald-600 transition-all"
+  >
+    Continue Learning
+  </button>
+)}
         <p className="text-xs text-slate-500 mb-4">
           Instructor: {e.courseId.teacherId?.name}
         </p>
@@ -290,24 +298,23 @@ const generateStudyPlan = async () => {
         <div className="w-full bg-emerald-100 rounded-full h-2 mb-3">
           <div
             className="bg-emerald-600 h-2 rounded-full"
-           style={{ width: `${e.progress || 0}%` }}
+            style={{ width: `${e.progress || 0}%` }}
           />
         </div>
 
         <p className="text-xs text-slate-500">
-         Progress: {e.progress || 0}%
+          Progress: {e.progress || 0}%
         </p>
 
         <button
-  onClick={() => navigate(`/course/${e.courseId._id}`)}
-  className="mt-4 w-full py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white rounded-xl text-xs font-bold hover:from-emerald-700 hover:to-emerald-600 transition-all"
->
-  Continue Learning
-</button>
-
+          onClick={() => navigate(`/course/${e.courseId._id}`)}
+          className="mt-4 w-full py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white rounded-xl text-xs font-bold hover:from-emerald-700 hover:to-emerald-600 transition-all"
+        >
+          Continue Learning
+        </button>
       </div>
     ))}
-  </div>
+</div>
 </section>
 
        
