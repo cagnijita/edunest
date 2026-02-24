@@ -2,6 +2,7 @@ import express from "express";
 import Enrollment from "../models/Enrollment.js";
 import Course from "../models/Course.js";
 import { protect } from "../middleware/auth.middleware.js";
+import Payment from "../models/Payment.js";
 
 const router = express.Router();
 
@@ -18,6 +19,23 @@ router.post("/:courseId", protect, async (req, res) => {
 if (req.user.role !== "student")
   return res.status(403).json({ message: "Only students can enroll" });
 
+const course = await Course.findById(courseId);
+    if (!course)
+      return res.status(404).json({ message: "Course not found" });
+    // 🔐 If paid, verify payment exists
+    if (course.price > 0) {
+      const payment = await Payment.findOne({
+        studentId,
+        courseId,
+        status: "success"
+      });
+
+      if (!payment) {
+        return res.status(403).json({
+          message: "Payment required before enrollment"
+        });
+      }
+    }
 // check exists
 const exists = await Enrollment.findOne({ studentId, courseId });
 if (exists)
@@ -59,4 +77,31 @@ router.get("/my", protect, async (req, res) => {
   }
 });
 
+router.post("/payments/simulate", protect, async (req, res) => {
+  try {
+    const { courseId } = req.body;
+    const studentId = req.user.id;
+
+    const course = await Course.findById(courseId);
+    if (!course)
+      return res.status(404).json({ message: "Course not found" });
+
+    await Payment.findOneAndUpdate(
+      { studentId, courseId },
+      {
+        studentId,
+        courseId,
+        amount: course.price,
+        transactionId: "SIMULATED_TXN",
+        status: "success"
+      },
+      { upsert: true }
+    );
+
+    res.json({ success: true });
+
+  } catch (err) {
+    res.status(500).json({ message: "Simulation failed" });
+  }
+});
 export default router;
