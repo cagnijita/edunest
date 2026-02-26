@@ -36,13 +36,23 @@ const DashboardSidebar: React.FC<SidebarProps> = ({ currentUser, activeTab, onTa
   };
 
   return (
-    <aside className="w-64 bg-gradient-to-b from-white to-emerald-50/30 h-full flex flex-col transition-all duration-300 border-r border-emerald-200">
-      <div className="p-6 flex items-center space-x-3 border-b border-emerald-200">
+   <aside className="
+w-64 sm:w-64
+max-sm:fixed max-sm:inset-y-0 max-sm:left-0
+max-sm:z-50
+max-sm:shadow-2xl
+max-sm:translate-x-0
+bg-gradient-to-b from-white to-emerald-50/30
+h-full flex flex-col
+transition-all duration-300
+border-r border-emerald-200
+">
+      <div className="p-4 sm:p-6 flex items-center space-x-3 border-b border-emerald-200">
         <div className="w-8 h-8 bg-gradient-to-br from-emerald-600 to-emerald-500 rounded-lg flex items-center justify-center text-white font-bold">EN</div>
         <span className="text-slate-900 font-bold text-xl tracking-tight">EduNest</span>
       </div>
 
-      <div className="flex-1 px-4 py-8 space-y-2 custom-scrollbar overflow-y-auto">
+    <div className="flex-1 px-3 sm:px-4 py-6 sm:py-8 space-y-2 custom-scrollbar overflow-y-auto">
         <p className="px-4 text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-4">Main Menu</p>
         {getLinks().map(link => (
           <button
@@ -72,9 +82,9 @@ const DashboardSidebar: React.FC<SidebarProps> = ({ currentUser, activeTab, onTa
 
       </div>
 
-      <div className="p-4 border-t border-emerald-200">
+    <div className="p-3 sm:p-4 border-t border-emerald-200">  
         <div className="flex items-center p-2 mb-4">
-          <img src={currentUser.avatar} className="w-10 h-10 rounded-full border-2 border-emerald-200" alt="" />
+          <img src={currentUser.avatar} className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border-2 border-emerald-200" alt="" />
           <div className="ml-3 overflow-hidden">
             <p className="text-sm font-bold text-slate-900 truncate">{currentUser.name}</p>
             <p className="text-[10px] text-slate-600 truncate capitalize">{currentUser.role.toLowerCase()}</p>

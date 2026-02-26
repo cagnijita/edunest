@@ -156,6 +156,7 @@ const generateStudyPlan = async () => {
   <DashboardTopbar onNavigate={(p)=>window.location.href='/?page='+p} />
 
   <div className="flex flex-1 overflow-hidden">
+      <div className="hidden lg:block">
     <DashboardSidebar
   currentUser={currentUser}
   activeTab={activeTab}
@@ -163,15 +164,15 @@ const generateStudyPlan = async () => {
   onLogout={onLogout}
 />
 
-
+</div>
 <main
   ref={containerRef}
-  className="flex-1 overflow-y-auto custom-scrollbar p-10 space-y-12"
+ className="flex-1 overflow-y-auto custom-scrollbar p-4 sm:p-6 lg:p-10 space-y-8 sm:space-y-12"
 >
 
 
 <div ref={topRef} className="scroll-mt-28" >
-        <header className="flex flex-col md:flex-row justify-between items-start md:items-center">
+     <header className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
           <div>
             <h1 className="text-3xl font-black text-slate-900">Learning Journey</h1>
             <p className="text-slate-600">Welcome back, {currentUser.name}. Keep up the great work!</p>
@@ -180,7 +181,7 @@ const generateStudyPlan = async () => {
              <input 
               type="text" 
               placeholder="Search library..." 
-              className="w-64 pl-12 pr-6 py-3 bg-white border border-emerald-200 rounded-2xl text-sm shadow-sm focus:ring-2 focus:ring-emerald-500 transition-all"
+             className="w-full sm:w-64 pl-12 pr-6 py-3 bg-white border border-emerald-200 rounded-2xl text-sm shadow-sm focus:ring-2 focus:ring-emerald-500 transition-all"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
              />
@@ -194,7 +195,7 @@ const generateStudyPlan = async () => {
 
         {/* Learning Stats Hero */}
        {dashboardData && (
-<div className="bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-[3rem] p-12 text-white flex flex-col md:flex-row items-center justify-between relative overflow-hidden shadow-2xl">
+<div className="bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-[2rem] sm:rounded-[3rem] p-6 sm:p-10 lg:p-12 text-white flex flex-col lg:flex-row items-center justify-between relative overflow-hidden shadow-2xl gap-6">
 
   <div className="relative z-10 max-w-lg">
 
@@ -250,7 +251,7 @@ const generateStudyPlan = async () => {
 </div>
 )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12">
           <div className="lg:col-span-2 space-y-12">
             {/* ================= MY COURSES ================= */}
 <section ref={coursesRef} className="scroll-mt-28">
@@ -268,13 +269,13 @@ const generateStudyPlan = async () => {
   </div>
 )}
 
-  <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
   {myCourses
     .filter((e: any) => e.courseId) // 🟢 prevent null crash
     .map((e: any) => (
       <div
         key={e._id}
-        className="bg-white rounded-[2.5rem] border border-emerald-100 shadow-sm p-8 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+       className="bg-white rounded-[1.5rem] sm:rounded-[2.5rem] border border-emerald-100 shadow-sm p-4 sm:p-6 lg:p-8"
       >
         <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-2">
           COURSE
@@ -323,7 +324,7 @@ const generateStudyPlan = async () => {
 >
                 <ul className="divide-y divide-emerald-50">
                   {myNotes.map(n => (
-                    <li key={n._id} className="px-10 py-6 flex items-center justify-between hover:bg-emerald-50 transition-colors group">
+                    <li key={n._id} className="px-4 sm:px-6 lg:px-10 py-4 sm:py-6 flex items-center justify-between gap-3">
                        <div className="flex items-center">
                           <div className="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mr-5 group-hover:bg-emerald-600 group-hover:text-white transition-all">
                              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" strokeWidth={2} /></svg>
