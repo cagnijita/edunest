@@ -295,23 +295,20 @@ const generateStudyPlan = async () => {
           Instructor: {e.courseId.teacherId?.name}
         </p>
 
-        <div className="w-full bg-emerald-100 rounded-full h-2 mb-3">
-          <div
-            className="bg-emerald-600 h-2 rounded-full"
-            style={{ width: `${e.progress || 0}%` }}
-          />
-        </div>
-
+       <div className="w-full bg-emerald-100 rounded-full h-2 mb-3 overflow-hidden">
+  <div
+    className="bg-emerald-600 h-2 rounded-full"
+    style={{
+      width: `${Math.min(e.progress || 0, 100)}%`,
+      maxWidth: "100%"
+    }}
+  />
+</div>
         <p className="text-xs text-slate-500">
           Progress: {e.progress || 0}%
         </p>
 
-        <button
-          onClick={() => navigate(`/course/${e.courseId._id}`)}
-          className="mt-4 w-full py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white rounded-xl text-xs font-bold hover:from-emerald-700 hover:to-emerald-600 transition-all"
-        >
-          Continue Learning
-        </button>
+      
       </div>
     ))}
 </div>

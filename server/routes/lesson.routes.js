@@ -6,24 +6,7 @@ import Module from "../models/Module.js";
 import LessonProgress from "../models/LessonProgress.js";
 const router = express.Router();
 
-/* ================= COMPLETE LESSON ================= */
-router.post("/complete", protect, async (req, res) => {
-  const { lessonId } = req.body;
 
-  const exists = await LessonProgress.findOne({
-    studentId: req.user._id,
-    lessonId
-  });
-
-  if (!exists) {
-    await LessonProgress.create({
-      studentId: req.user._id,
-      lessonId
-    });
-  }
-
-  res.json({ message: "Lesson marked completed" });
-});
 /* ================= CREATE LESSON ================= */
 router.post("/:courseId", protect, lessonUpload.single("file"), async (req, res) => {
   try {

@@ -56,13 +56,40 @@ export const enrollCourse = async (req, res) => {
 
 // MY COURSES
 export const myCourses = async (req, res) => {
-  const courses = await Enrollment.find({ studentId: req.user._id })
-    .populate({
+  try {
+
+    const enrollments = await Enrollment.find({
+      studentId: req.user._id
+    }).populate({
       path: "courseId",
       populate: { path: "teacherId", select: "name" }
     });
 
-  res.json(courses);
+    const result = [];
+
+    for (const enroll of enrollments) {
+
+      const totalLessons = await Lesson.countDocuments({
+        courseId: enroll.courseId._id
+      });
+
+      const completedCount = enroll.completedLessons?.length || 0;
+
+      const progress = totalLessons > 0
+        ? Math.round((completedCount / totalLessons) * 100)
+        : 0;
+
+      result.push({
+        ...enroll.toObject(),
+        progress
+      });
+    }
+
+    res.json(result);
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };
 
 // UPDATE COURSE (Teacher only)
@@ -165,6 +192,7 @@ export const previewCourse = async (req, res) => {
       }
     }
 // 🔥 Calculate progress for student
+// 🔥 Calculate progress for student
 let progress = 0;
 
 if (req.user && isAllowed) {
@@ -174,7 +202,17 @@ if (req.user && isAllowed) {
   });
 
   if (enrollment) {
-    progress = enrollment.progress || 0;
+
+    // count total lessons in course
+    const totalLessons = await Lesson.countDocuments({
+      courseId: course._id
+    });
+
+    const completedCount = enrollment.completedLessons?.length || 0;
+
+    progress = totalLessons > 0
+      ? Math.round((completedCount / totalLessons) * 100)
+      : 0;
   }
 }
     res.json({

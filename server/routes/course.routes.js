@@ -38,34 +38,54 @@ router.post("/complete-lesson", protect, async (req, res) => {
   try {
     const { lessonId, courseId } = req.body;
 
+    console.log("LessonId:", lessonId);
+    console.log("CourseId:", courseId);
+    console.log("Student:", req.user._id);
+
     const enrollment = await Enrollment.findOne({
       studentId: req.user._id,
-      courseId
+      courseId: courseId
     });
 
     if (!enrollment) {
-      return res.status(400).json({ message: "Not enrolled" });
+      console.log("Enrollment NOT FOUND");
+      return res.status(404).json({ message: "Enrollment not found" });
     }
 
-    // Avoid duplicate lesson completion
-    if (!enrollment.completedLessons.includes(lessonId)) {
-      enrollment.completedLessons.push(lessonId);
-    }
+    console.log("Before:", enrollment.completedLessons);
 
-    // Count total lessons in course
-    const totalLessons = await Lesson.countDocuments({ courseId });
-
-    const progress = Math.round(
-      (enrollment.completedLessons.length / totalLessons) * 100
+    // FIX ObjectId comparison
+    const exists = enrollment.completedLessons.some(
+      id => id.toString() === lessonId
     );
 
-    enrollment.progress = progress;
+    if (!exists) {
+      enrollment.completedLessons.push(lessonId);
+      await enrollment.save();
+      console.log("Saved successfully");
+    }
 
-    await enrollment.save();
+    console.log("After:", enrollment.completedLessons);
 
-    res.json({ progress });
+   // calculate progress
+const totalLessons = await Lesson.countDocuments({
+  courseId: courseId
+});
 
+const completedCount = enrollment.completedLessons.length;
+
+const progress =
+  totalLessons > 0
+    ? Math.round((completedCount / totalLessons) * 100)
+    : 0;
+
+res.json({
+  success: true,
+  progress,
+  completedLessons: completedCount
+});
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: err.message });
   }
 });

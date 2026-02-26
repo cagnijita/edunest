@@ -136,16 +136,10 @@ useEffect(() => {
 useEffect(() => {
   const user = JSON.parse(localStorage.getItem("user") || "null");
 
-  console.log("Timer effect triggered");
-  console.log("Active lesson:", activeLesson);
-
-  if (!activeLesson || activeLesson.type !== "video") return;
+  if (!activeLesson) return;
   if (user?.role !== "student") return;
 
-  const duration = activeLesson.duration || 600;
-  const requiredWatchTime = 5000; // 5 sec for test
-
-  console.log("Timer set for:", requiredWatchTime);
+  const requiredWatchTime = 5000;
 
   const timer = setTimeout(() => {
     console.log("Timer completed → calling API");
@@ -155,7 +149,6 @@ useEffect(() => {
   return () => clearTimeout(timer);
 
 }, [activeLesson]);
-
 const markLessonCompleted = async (lessonId: string) => {
   if (completedLessons.includes(lessonId)) return;
 
@@ -163,23 +156,34 @@ const markLessonCompleted = async (lessonId: string) => {
     console.log("Sending completion request...");
 
     const res = await fetch("http://localhost:5000/api/courses/complete-lesson", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${localStorage.getItem("token")}`
-  },
-  body: JSON.stringify({
-    lessonId,
-    courseId: id
-  })
-});
-
-    console.log("Response status:", res.status);
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      },
+      body: JSON.stringify({
+        lessonId,
+        courseId: id
+      })
+    });
 
     const data = await res.json();
-    console.log("Response data:", data);
 
+    console.log("New progress:", data.progress);
+
+    // ✅ update completed lessons locally
     setCompletedLessons(prev => [...prev, lessonId]);
+
+    // ✅ VERY IMPORTANT: reload course to get updated progress
+    const courseRes = await fetch(`http://localhost:5000/api/courses/preview/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      }
+    });
+
+    const updatedCourse = await courseRes.json();
+
+    setCourse(updatedCourse);
 
   } catch (err) {
     console.error("Completion failed:", err);
@@ -201,6 +205,13 @@ const markLessonCompleted = async (lessonId: string) => {
               <p className="text-slate-600 leading-relaxed">
                 {course.description}
               </p>
+              
+
+
+
+ 
+
+
             </div>
           </div></div>
       )}
