@@ -1,11 +1,11 @@
 import { useState } from "react";
-
+const API = import.meta.env.VITE_API_URL;
 export default function ForgotPassword({ setCurrentPage }) {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
-
+const API = import.meta.env.VITE_API_URL;
   const sendLink = async () => {
     if (!email) {
       setError("Please enter your email address");
@@ -16,7 +16,7 @@ export default function ForgotPassword({ setCurrentPage }) {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/forgot-password", {
+      const res = await fetch(`${API}/api/auth/forgot-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email })

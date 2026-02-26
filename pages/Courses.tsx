@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+const API = import.meta.env.VITE_API_URL;
 export default function Courses() {
   const [courses, setCourses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -43,7 +44,7 @@ const [selectedModuleId, setSelectedModuleId] = useState("");
   const navigate = useNavigate();
   // load all available courses
   useEffect(() => {
-    fetch("http://localhost:5000/api/courses")
+    fetch("${API}/api/courses")
       .then(res => res.json())
       .then(data => {
         // console.log("Fetched courses:", data);
@@ -57,7 +58,7 @@ const [selectedModuleId, setSelectedModuleId] = useState("");
 
   const fetchEnrollments = async () => {
     const res = await fetch(
-      "http://localhost:5000/api/enrollments/my",
+      `${API}/api/enrollments/my`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -135,7 +136,7 @@ useEffect(() => {
   }
 }, [successMessage]);
   const enroll = async (courseId: string) => {
-    const res = await fetch(`http://localhost:5000/api/enrollments/${courseId}`, {
+    const res = await fetch(`${API}/api/enrollments/${courseId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -170,7 +171,7 @@ useEffect(() => {
   if (!confirmPay) return;
 
   const res = await fetch(
-    "http://localhost:5000/api/enrollments/payments/simulate",
+    `${API}/api/enrollments/payments/simulate`,
     {
       method: "POST",
       headers: {
@@ -205,7 +206,7 @@ useEffect(() => {
     if (path.startsWith("http")) return path;
 
     // uploaded image
-    return `http://localhost:5000${path}`;
+    return `${API}${path}`;
   };
 
   const isOwner = (course: any) => {
@@ -304,7 +305,7 @@ const addQuestion = () => {
                     onClick={async () => {
                       if (!confirm("Delete this course?")) return;
 
-                      await fetch(`http://localhost:5000/api/courses/${course._id}`, {
+                      await fetch(`${API}/api/courses/${course._id}`, {
                         method: "DELETE",
                         headers: {
                           Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -396,7 +397,7 @@ const addQuestion = () => {
 
     // when opening content → load modules
     if (next) {
-      fetch(`http://localhost:5000/api/modules/${selectedCourse._id}`)
+      fetch(`${API}/api/modules/${selectedCourse._id}`)
         .then(res => res.json())
         .then(data => setModules(data))
         .catch(() => setModules([]));
@@ -643,8 +644,8 @@ if (!moduleName || !moduleName.trim()) {
 
     /* ---------- API CALL ---------- */
    const url = editingLessonId
-  ? `http://localhost:5000/api/lessons/${editingLessonId}`
-  : `http://localhost:5000/api/lessons/${selectedCourse._id}`;
+  ? `${API}/api/lessons/${editingLessonId}`
+  : `${API}/api/lessons/${selectedCourse._id}`;
 
 const method = editingLessonId ? "PUT" : "POST";
 
@@ -771,7 +772,7 @@ setEditingLessonId(null);
   const id = selectedCourse?._id;
 
   if (editMode) {
-    await fetch(`http://localhost:5000/api/courses/${id}`, {
+    await fetch(`${API}/api/courses/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

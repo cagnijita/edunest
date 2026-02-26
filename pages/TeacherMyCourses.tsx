@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
+const API = import.meta.env.VITE_API_URL;
 
 const TeacherMyCourses = () => {
   const [courses, setCourses] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/courses/teacher/my", {
+    fetch(`${API}/api/courses/teacher/my`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`
       }

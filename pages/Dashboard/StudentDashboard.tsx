@@ -4,7 +4,7 @@ import { User, Subject, Note, Announcement } from '../../types';
 import DashboardSidebar from '../../components/Layout/DashboardSidebar';
 import DashboardTopbar from '../../components/Layout/DashboardTopbar';
 import { useNavigate } from "react-router-dom";
-
+const API = import.meta.env.VITE_API_URL;
 
 interface StudentDashboardProps {
   currentUser: User;
@@ -55,7 +55,7 @@ const scrollToSection = (id: string) => {
 useEffect(() => {
   const fetchNotes = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/notes", {
+      const res = await fetch(`${API}/api/notes`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`
         }
@@ -87,7 +87,7 @@ useEffect(() => {
  const [dashboardData, setDashboardData] = useState<any>(null);
 
 useEffect(() => {
-  fetch("http://localhost:5000/api/student/dashboard", {
+  fetch(`${API}/api/student/dashboard`, {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`
     }
@@ -104,7 +104,7 @@ useEffect(() => {
   const [myCourses,setMyCourses]=useState([]);
 
 useEffect(() => {
-  fetch("http://localhost:5000/api/courses/my", {
+  fetch(`${API}/api/courses/my`, {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`
     }
@@ -116,7 +116,7 @@ useEffect(() => {
 const handleDownload = async (noteId: string) => {
   try {
     const res = await fetch(
-      `http://localhost:5000/api/notes/download/${noteId}`,
+      `${API}/api/notes/download/${noteId}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -126,7 +126,7 @@ const handleDownload = async (noteId: string) => {
 
     const data = await res.json();
 
-    window.open(`http://localhost:5000${data.fileUrl}`, "_blank");
+    window.open(`${API}${data.fileUrl}`, "_blank");
   } catch (err) {
     console.error("Download failed");
   }
@@ -134,7 +134,7 @@ const handleDownload = async (noteId: string) => {
 const generateStudyPlan = async () => {
   setLoadingPlan(true);
 
-  const res = await fetch("http://localhost:5000/api/ai/study-plan", {
+  const res = await fetch(`${API}/api/ai/study-plan`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

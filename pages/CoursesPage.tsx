@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
+const API = import.meta.env.VITE_API_URL;
 const CoursesPage = () => {
   const [courses, setCourses] = useState([]);
 
   useEffect(()=>{
-    fetch("http://localhost:5000/api/courses")
+    fetch(`${API}/api/courses`)
       .then(res=>res.json())
       .then(setCourses);
   },[]);
 
   const enroll = async (id:string)=>{
-    await fetch(`http://localhost:5000/api/courses/enroll/${id}`,{
+    await fetch(`${API}/api/courses/enroll/${id}`,{
       method:"POST",
       headers:{ Authorization:`Bearer ${localStorage.getItem("token")}` }
     });

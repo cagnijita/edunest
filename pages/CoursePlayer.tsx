@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+const API = import.meta.env.VITE_API_URL;
 
 export default function CoursePlayer({ courseId }: { courseId?: string }) {
   const params = useParams();
@@ -52,7 +53,7 @@ if (user?.role === "student" && !isEnrolled) {
   setActiveLesson(null);
   return;
 }
-      const res = await fetch(`http://localhost:5000/api/lessons/${lessonId}`, {
+      const res = await fetch(`${API}/api/lessons/${lessonId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`
         }
@@ -71,7 +72,7 @@ useEffect(() => {
   if (!id) return;
 
   const loadCourse = async () => {
-    const res = await fetch(`http://localhost:5000/api/courses/preview/${id}`, {
+    const res = await fetch(`${API}/api/courses/preview/${id}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`
       }
@@ -155,7 +156,7 @@ const markLessonCompleted = async (lessonId: string) => {
   try {
     console.log("Sending completion request...");
 
-    const res = await fetch("http://localhost:5000/api/courses/complete-lesson", {
+    const res = await fetch(`${API}/api/courses/complete-lesson`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -175,7 +176,7 @@ const markLessonCompleted = async (lessonId: string) => {
     setCompletedLessons(prev => [...prev, lessonId]);
 
     // ✅ VERY IMPORTANT: reload course to get updated progress
-    const courseRes = await fetch(`http://localhost:5000/api/courses/preview/${id}`, {
+    const courseRes = await fetch(`${API}/api/courses/preview/${id}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`
       }
@@ -262,7 +263,7 @@ const markLessonCompleted = async (lessonId: string) => {
           const newName = prompt("Enter new module name", module.title);
           if (!newName) return;
 
-          fetch(`http://localhost:5000/api/modules/${module._id}`, {
+          fetch(`${API}/api/modules/${module._id}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
@@ -281,7 +282,7 @@ const markLessonCompleted = async (lessonId: string) => {
         onClick={async () => {
           if (!confirm("Delete this module and all its lessons?")) return;
 
-          await fetch(`http://localhost:5000/api/modules/${module._id}`, {
+          await fetch(`${API}/api/modules/${module._id}`, {
             method: "DELETE",
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -336,7 +337,7 @@ const markLessonCompleted = async (lessonId: string) => {
 
           if (!confirm("Delete this lesson?")) return;
 
-          await fetch(`http://localhost:5000/api/lessons/${lesson._id}`, {
+          await fetch(`${API}/api/lessons/${lesson._id}`, {
             method: "DELETE",
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -538,7 +539,7 @@ const markLessonCompleted = async (lessonId: string) => {
 
         <button
           onClick={async () => {
-            await fetch(`http://localhost:5000/api/lessons/${editingLesson._id}`, {
+            await fetch(`${API}/api/lessons/${editingLesson._id}`, {
               method: "PUT",
               headers: {
                 "Content-Type": "application/json",

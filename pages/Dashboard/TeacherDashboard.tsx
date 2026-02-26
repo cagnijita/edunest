@@ -6,6 +6,7 @@ import DashboardTopbar from '../../components/Layout/DashboardTopbar';
 import { useNavigate } from "react-router-dom";
 import { generateSummary } from '@/server/services/geminiService';
 import { create } from 'domain';
+const API = import.meta.env.VITE_API_URL;
 
 interface TeacherDashboardProps {
   currentUser: User;
@@ -53,7 +54,7 @@ const defaultTab =
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/academic/classes")
+    fetch(`${API}/api/academic/classes`)
       .then(res => res.json())
       .then(data => setClasses(data));
   }, []);
@@ -61,7 +62,7 @@ const defaultTab =
   useEffect(() => {
     if (!selectedClass) return;
 
-    fetch(`http://localhost:5000/api/topics/${selectedClass}`, {
+    fetch(`${API}/api/topics/${selectedClass}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`
       }
@@ -78,7 +79,7 @@ const defaultTab =
 
   const fetchTeacherCourses = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/courses/teacher/my", {
+      const res = await fetch(`${API}/api/courses/teacher/my`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`
         }
@@ -102,7 +103,7 @@ const defaultTab =
     setIsSummarizing(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/ai/summarize", {
+      const res = await fetch(`${API}/api/ai/summarize`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -128,7 +129,7 @@ const defaultTab =
   };
 
   const loadNotes = async () => {
-    const res = await fetch("http://localhost:5000/api/notes", {
+    const res = await fetch(`${API}/api/notes`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`
       }
@@ -158,7 +159,7 @@ const defaultTab =
 
    
       try {
-        const res = await fetch("http://localhost:5000/api/notes", {
+        const res = await fetch(`${API}/api/notes`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -184,7 +185,7 @@ const defaultTab =
 
     const createTopic = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/topics", {
+        const res = await fetch(`${API}/api/topics`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -219,7 +220,7 @@ const defaultTab =
       }
 
       try {
-        const res = await fetch("http://localhost:5000/api/courses", {
+        const res = await fetch(`${API}/api/courses`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -453,7 +454,7 @@ const defaultTab =
                             <div className="flex items-center gap-5 text-sm font-semibold">
 
                               <a
-                                href={`http://localhost:5000${note.fileUrl}`}
+                                href={`${API}${note.fileUrl}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-emerald-600 hover:text-emerald-700 transition"
@@ -470,7 +471,7 @@ const defaultTab =
                                   // IMPORTANT: fetch topics of that note's class
                                   const classId = note.topicId?.classId?._id;
 
-                                  const res = await fetch(`http://localhost:5000/api/topics/${classId}`, {
+                                  const res = await fetch(`${API}/api/topics/${classId}`, {
                                     headers: {
                                       Authorization: `Bearer ${localStorage.getItem("token")}`
                                     }
@@ -490,7 +491,7 @@ const defaultTab =
                                 onClick={async () => {
                                   if (!confirm("Delete this note?")) return;
 
-                                  await fetch(`http://localhost:5000/api/notes/${note._id}`, {
+                                  await fetch(`${API}/api/notes/${note._id}`, {
                                     method: "DELETE",
                                     headers: {
                                       Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -597,7 +598,7 @@ bg-gradient-to-br from-[#0b132b] via-[#0d1b2a] to-[#1b263b] flex flex-col gap-6 
 
                     <button
                       onClick={async () => {
-                        await fetch(`http://localhost:5000/api/notes/${editingNote._id}`, {
+                        await fetch(`${API}/api/notes/${editingNote._id}`, {
                           method: "PUT",
                           headers: {
                             "Content-Type": "application/json",

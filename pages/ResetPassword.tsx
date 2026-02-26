@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+const API = import.meta.env.VITE_API_URL;
 const ResetPassword = ({ onNavigate }) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -27,7 +27,7 @@ const ResetPassword = ({ onNavigate }) => {
     const token = localStorage.getItem("resetToken");
 
     try {
-      const res = await fetch(`http://localhost:5000/api/auth/reset-password/${token}`, {
+      const res = await fetch(`${API}/api/auth/reset-password/${token}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

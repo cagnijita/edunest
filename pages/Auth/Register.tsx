@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect} from 'react';
 import { UserRole } from '../../types';
-import { api } from '../../api';
+const API = import.meta.env.VITE_API_URL;
 
 const Register: React.FC<{ onNavigate: (p: string) => void }> = ({ onNavigate }) => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '' , role: 'student',classId: "" });
@@ -11,7 +11,7 @@ const Register: React.FC<{ onNavigate: (p: string) => void }> = ({ onNavigate })
   const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/academic/classes")
+    fetch(`${API}/api/academic/classes`)
       .then(res => res.json())
       .then(data => setClasses(data));
   }, []);
@@ -22,7 +22,7 @@ const Register: React.FC<{ onNavigate: (p: string) => void }> = ({ onNavigate })
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/register", {
+      const res = await fetch(`${API}/api/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
