@@ -255,7 +255,7 @@ const defaultTab =
 
     return (
       <div className="flex min-h-screen bg-gradient-to-b from-white to-emerald-50/30">
-        <div className="hidden lg:block">
+        <div className="hidden xl:block">
           <DashboardSidebar
             currentUser={currentUser}
             activeTab={activeTab}
@@ -269,13 +269,13 @@ const defaultTab =
 
         <div className="flex-1 flex flex-col">
           <DashboardTopbar onNavigate={(p) => window.location.href = '/?page=' + p} />
-          <main className="flex-1 overflow-y-auto custom-scrollbar p-4 sm:p-6 lg:p-10">
-            <header className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-12">
+         <main className="flex-1 overflow-y-auto custom-scrollbar p-4 sm:p-6 lg:p-8 xl:p-10">
+        <header className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-6 mb-8">
               <div>
                 <h1 className="text-3xl font-black text-slate-900">Academic Workspace</h1>
                 <p className="text-slate-600">Welcome back, {currentUser.name}.</p>
               </div>
-              <div className="flex flex-wrap items-center gap-4">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3 w-full xl:w-auto">
                 <label className="flex items-center gap-3 cursor-pointer max-w-xs">
                   <input
                     type="file"
@@ -298,7 +298,7 @@ const defaultTab =
                   placeholder="Title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="px-3 py-2 rounded-md border border-emerald-500/40 w-full sm:w-64
+                 className="px-3 py-2 rounded-md border border-emerald-500/40 w-full sm:w-56 xl:w-64
   bg-[#0B1A2B] text-white placeholder:text-slate-400 caret-white
   focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
                 />
@@ -311,14 +311,14 @@ const defaultTab =
                   ))}
                 </select>
 
-                <select value={selectedTopic} onChange={(e) => setSelectedTopic(e.target.value)} className="px-3 py-2 rounded-md border border-emerald-200 bg-white">
+                <select value={selectedTopic} onChange={(e) => setSelectedTopic(e.target.value)} className="px-3 py-2 rounded-md border border-emerald-200 bg-white w-full sm:w-auto">
                   <option value="">Select Topic</option>
                   {topics.map((t: any) => (
                     <option key={t._id} value={t._id}>{t.name}</option>
                   ))}
                 </select>
 
-                <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+               <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto sm:min-w-[260px]">
                   <input
                     type="text"
                     placeholder="Create new topic"
@@ -421,11 +421,11 @@ const defaultTab =
             </div>
            
 
-            <div className=" mt-8 grid grid-cols-1 xl:grid-cols-3 gap-8 lg:gap-12">
+          <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
               <div className="lg:col-span-2 space-y-12">
                 <section>
                   <h3 className="text-xl font-bold mb-8">Study Materials</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     {teacherNotes.map(note => {
                       console.log("NOTE DATA:", note);
                       return (
@@ -519,7 +519,7 @@ const defaultTab =
                 </section>
               </div>
 
-              <div className="relative rounded-[2.5rem] p-7 sm:p-8 text-white overflow-hidden shadow-2xl
+            <div className="relative rounded-[2rem] p-6 sm:p-7 text-white overflow-hidden shadow-xl
 bg-gradient-to-br from-[#0b132b] via-[#0d1b2a] to-[#1b263b] flex flex-col gap-6 self-start">
 
                 {/* glow orb */}
