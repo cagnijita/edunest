@@ -48,12 +48,12 @@ const Register: React.FC<{ onNavigate: (p: string) => void }> = ({ onNavigate })
   };
 
   return (
-    <div className="min-h-screen pt-32 pb-24 flex items-center justify-center bg-gradient-to-br from-white via-emerald-50/30 to-white px-6 overflow-hidden relative">
+  <div className="min-h-screen pt-24 sm:pt-32 pb-16 sm:pb-24 flex items-center justify-center bg-gradient-to-br from-white via-emerald-50/30 to-white px-4 sm:px-6 relative overflow-visible">
       {/* Decorative Background Elements */}
       <div className="absolute top-40 right-0 w-96 h-96 bg-emerald-100/40 rounded-full blur-3xl -mr-48 opacity-50"></div>
       <div className="absolute bottom-40 left-0 w-80 h-80 bg-emerald-50/30 rounded-full blur-3xl -ml-40 opacity-40"></div>
 
-      <div className="max-w-md w-full z-10 animate-fade-in">
+     <div className="max-w-md w-full z-10 animate-fade-in relative">
         <div className="bg-white backdrop-blur-xl rounded-3xl shadow-2xl border border-emerald-200/50 p-10">
           {/* Header */}
           <div className="text-center mb-10">
@@ -140,7 +140,7 @@ const Register: React.FC<{ onNavigate: (p: string) => void }> = ({ onNavigate })
                 <label className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-3">Select Your Class</label>
                 <select
                   required
-                  className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl bg-white/50 text-slate-900 focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10 transition-all duration-200 font-medium"
+                 <div className="bg-white backdrop-blur-xl rounded-3xl shadow-2xl border border-emerald-200/50 p-6 sm:p-10 max-h-[90vh] overflow-y-auto">
                   value={classId}
                   onChange={(e) => setClassId(e.target.value)}
                 >
