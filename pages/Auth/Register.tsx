@@ -138,12 +138,8 @@ const Register: React.FC<{ onNavigate: (p: string) => void }> = ({ onNavigate })
             {formData.role === "student" && (
               <div>
                 <label className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-3">Select Your Class</label>
-                <select
-                  required
-                 <div className="bg-white backdrop-blur-xl rounded-3xl shadow-2xl border border-emerald-200/50 p-6 sm:p-10 max-h-[90vh] overflow-y-auto">
-                  value={classId}
-                  onChange={(e) => setClassId(e.target.value)}
-                >
+                <select required value={classId} onChange={(e) => setClassId(e.target.value)}
+                className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl bg-white text-slate-900 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all duration-200 font-medium">
                   <option value="">Choose a class...</option>
                   {classes.map((c:any) => (
                     <option key={c._id} value={c._id}>{c.name}</option>

@@ -44,7 +44,7 @@ const [selectedModuleId, setSelectedModuleId] = useState("");
   const navigate = useNavigate();
   // load all available courses
   useEffect(() => {
-    fetch("${API}/api/courses")
+    fetch(`${API}/api/courses`)
       .then(res => res.json())
       .then(data => {
         // console.log("Fetched courses:", data);
@@ -150,7 +150,7 @@ useEffect(() => {
    if (res.ok) {
   setSuccessMessage("Successfully enrolled!");
 
-  // 🔥 Immediately update enrolledIds
+  //  Immediately update enrolledIds
   setEnrolledIds(prev => [...prev, courseId.toString()]);
 
   setShowForm(false);
@@ -191,7 +191,7 @@ useEffect(() => {
     return;
   }
 
-  // ✅ Only enroll if simulation succeeded
+  //  Only enroll if simulation succeeded
   await enroll(course._id);
 };
 

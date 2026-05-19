@@ -5,31 +5,41 @@ export default function ForgotPassword({ setCurrentPage }) {
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
-const API = import.meta.env.VITE_API_URL;
+
   const sendLink = async () => {
-    if (!email) {
-      setError("Please enter your email address");
+  if (!email) {
+    setError("Please enter your email address");
+    return;
+  }
+
+  setError("");
+  setLoading(true);
+
+  try {
+    const res = await fetch(`${API}/api/auth/forgot-password`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      setError(data.message || "Failed to send reset link");
+      setLoading(false);
       return;
     }
-    
-    setError("");
-    setLoading(true);
 
-    try {
-      const res = await fetch(`${API}/api/auth/forgot-password`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email })
-      });
+    setSent(true);
+    setLoading(false);
 
-      const data = await res.json();
-      setSent(true);
-      setLoading(false);
-    } catch (err) {
-      setError("Failed to send reset link. Please try again.");
-      setLoading(false);
-    }
-  };
+  } catch (err) {
+    setError("Server not responding");
+    setLoading(false);
+  }
+};
 
   return (
     <div className="min-h-[calc(100vh-64px)] flex items-center justify-center bg-gradient-to-br from-white via-emerald-50/30 to-white px-4 overflow-hidden relative">
